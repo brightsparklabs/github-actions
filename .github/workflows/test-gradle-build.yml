@@ -27,11 +27,16 @@ on:
         description: "The short ref name of the branch or tag that triggered the workflow run."
         required: true
         type: string
+      os:
+        description: "The operating system to run the Gradle build on. Defaults to `ubuntu-latest`."
+        default: ubuntu-latest
+        required: false
+        type: string
 
 jobs:
   # Build with Gradle.
   gradle-build:
-    runs-on: ubuntu-latest
+    runs-on: ${{ inputs.os }}
     steps:
       - uses: actions/checkout@v3
         with:
