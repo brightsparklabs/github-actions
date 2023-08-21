@@ -24,10 +24,10 @@ on:
   # This workflow will run when called by another workflow.
   workflow_call:
     inputs:
-        github-ref-name:
-          description: "The short ref name of the branch or tag that triggered the workflow run."
-          required: true
-          type: string
+      github-ref-name:
+        description: "The short ref name of the branch or tag that triggered the workflow run."
+        required: true
+        type: string
 
 jobs:
   publish-to-maven-central:
