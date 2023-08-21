@@ -56,4 +56,3 @@ jobs:
         env:
           PR_URL: ${{ inputs.pr-url }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    

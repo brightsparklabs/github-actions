@@ -7,7 +7,7 @@
  #   <job-id>:
  #     uses: brightsparklabs/github-actions/.github/workflows/test-gradle-build.yml@<version>
  #     with:
- #       github-ref-name: <github-ref-name>
+ #       github-ref-name: ${GITHUB_REF_NAME}
  # ```
  #
  # See https://docs.github.com/en/actions/using-workflows/reusing-workflows#creating-a-reusable-workflow
@@ -30,7 +30,7 @@ on:
 
 jobs:
   # Build with Gradle.
-  build:
+  gradle-build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -42,9 +42,7 @@ jobs:
         # - https://github.com/actions/checkout/issues/290
         # - https://github.com/actions/checkout/issues/882
         if: github.ref_type == 'tag'
-        run: git fetch -fv origin tag "${GITHUB_REF_NAME}"
-        env:
-          GITHUB_REF_NAME: ${{ inputs.github-ref-name }}
+        run: git fetch -fv origin tag "${{ inputs.github-ref-name }}"
       - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
