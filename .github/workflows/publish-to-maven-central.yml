@@ -5,9 +5,11 @@
  # ```
  # jobs:
  #   <job-id>:
+ #     needs: <test-job-id>
  #     uses: brightsparklabs/github-actions/.github/workflows/publish-to-maven-central.yml@<version>
  #     with:
  #       github-ref-name: ${GITHUB_REF_NAME}
+ #     secrets: inherit
  # ```
  #
  # See https://docs.github.com/en/actions/using-workflows/reusing-workflows#creating-a-reusable-workflow

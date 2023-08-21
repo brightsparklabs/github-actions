@@ -5,6 +5,7 @@
  # ```
  # jobs:
  #   <job-id>:
+ #     needs: <test-job-id>
  #     uses: brightsparklabs/github-actions/.github/workflows/dependabot-auto-merge.yml@<version>
  #     with:
  #       pr-url: <pr-url>
@@ -51,7 +52,7 @@ jobs:
         # Merge the PR automatically once all status checks have passed. If no status checks are
         # set within the branch protection rules, this will merge every time. To avoid auto-merging
         # breaking changes, this workflow should depend on another workflow that performs testing.
-        # For example, setting `needs: <unit-test-job-id>` in the calling workflow job.
+        # For example, setting `needs: <test-job-id>` in the calling workflow job.
         run: gh pr merge --auto --merge "$PR_URL"
         env:
           PR_URL: ${{ inputs.pr-url }}
