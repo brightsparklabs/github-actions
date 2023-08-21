@@ -1,0 +1,63 @@
+##
+ # A reusable workflow for publishing packages to Maven central.
+ #
+ # This workflow can be called from workflows in other repos with:
+ # ```
+ # jobs:
+ #   <job-id>:
+ #     uses: brightsparklabs/github-actions/.github/workflows/publish-to-maven-central.yml@<version>
+ #     with:
+ #       github-ref-name: ${GITHUB_REF_NAME}
+ # ```
+ #
+ # See https://docs.github.com/en/actions/using-workflows/reusing-workflows#creating-a-reusable-workflow
+ # ______________________________________________________________________________
+ #
+ # Maintained by brightSPARK Labs.
+ # www.brightsparklabs.com
+ ##
+
+# name: Publish to Maven Central
+# on:
+#   push:
+#     branches:
+#       - master
+
+name: Publish to Maven Central
+on:
+  # This workflow will run when called by another workflow.
+  workflow_call:
+    inputs:
+        github-ref-name:
+          description: "The short ref name of the branch or tag that triggered the workflow run."
+          required: true
+          type: string
+
+jobs:
+  publish-to-maven-central:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Fix tag
+        # Workaround actions/checkout bug. See:
+        # - https://github.com/actions/checkout/issues/290
+        # - https://github.com/actions/checkout/issues/882
+        if: github.ref_type == 'tag'
+        run: git fetch -fv origin tag ""${{ inputs.github-ref-name }}""
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: "17"
+          distribution: "temurin"
+          cache: "gradle"
+      - name: Publish package
+        run: |
+          mkdir -p ~/.gradle
+          ./gradlew -i publishToMavenCentral
+        env:
+          ORG_GRADLE_PROJECT_signingKey: ${{ secrets.PGP_SIGNING_KEY }}
+          ORG_GRADLE_PROJECT_signingPassword: ${{ secrets.PGP_SIGNING_PASSWORD }}
+          ORG_GRADLE_PROJECT_sonatypeUsername: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
+          ORG_GRADLE_PROJECT_sonatypePassword: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
