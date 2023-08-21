@@ -17,12 +17,6 @@
  # www.brightsparklabs.com
  ##
 
-# name: Publish to Maven Central
-# on:
-#   push:
-#     branches:
-#       - master
-
 name: Publish to Maven Central
 on:
   # This workflow will run when called by another workflow.
