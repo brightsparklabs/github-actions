@@ -1,0 +1,59 @@
+##
+ # A reusable Dependabot auto-merge workflow for merging patch and minor updates.
+ #
+ # This workflow can be called from workflows in other repos with:
+ # ```
+ # jobs:
+ #   <job-id>:
+ #     needs: <test-job-id>
+ #     uses: brightsparklabs/github-actions/.github/workflows/dependabot-auto-merge.yml@<version>
+ #     with:
+ #       pr-url: <pr-url>
+ #     secrets: inherit
+ # ```
+ #
+ # See https://docs.github.com/en/actions/using-workflows/reusing-workflows#creating-a-reusable-workflow
+ # ______________________________________________________________________________
+ #
+ # Maintained by brightSPARK Labs.
+ # www.brightsparklabs.com
+ ##
+
+name: Dependabot auto-merge
+on:
+  # This workflow will run when called by another workflow.
+  workflow_call:
+    inputs:
+      pr-url:
+        description: "The URL of the Dependabot PR to auto-merge."
+        required: true
+        type: string
+
+jobs:
+  # Auto-merge dependabot PR.
+  # Based on https://docs.github.com/en/code-security/dependabot/working-with-dependabot/automating-dependabot-with-github-actions#enable-auto-merge-on-a-pull-request
+  auto-merge-dependabot-pr:
+    # Run if Dependabot triggered the initial workflow run.
+    if: ${{ github.actor == 'dependabot[bot]' }}
+    runs-on: ubuntu-latest
+    steps:
+      # Fetch the Dependabot metadata that describes the updated dependencies.
+      - name: Fetch Dependabot metadata
+        # Specify the ID to use to access the output of this step.
+        id: metadata
+        # Specify that this step will run the `dependabot/fetch-metadata` action.
+        uses: dependabot/fetch-metadata@v1
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+      # Auto-merge the PR.
+      - name: Auto-merge Dependabot PR
+        # Auto-merge dependencies only for patch and minor updates.
+        if: ${{ steps.metadata.outputs.update-type == 'version-update:semver-patch' || steps.metadata.outputs.update-type == 'version-update:semver-minor' }}
+        # Merge the PR automatically once all status checks have passed. If no status checks are
+        # set within the branch protection rules, this will merge every time. To avoid auto-merging
+        # breaking changes, this workflow should depend on another workflow that performs testing.
+        # For example, setting `needs: <test-job-id>` in the calling workflow job.
+        run: gh pr merge --auto --merge "$PR_URL"
+        env:
+          PR_URL: ${{ inputs.pr-url }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
