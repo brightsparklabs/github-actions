@@ -6,8 +6,6 @@
  # jobs:
  #   <job-id>:
  #     uses: brightsparklabs/github-actions/.github/workflows/test-gradle-build.yml@<version>
- #     with:
- #       github-ref-name: ${GITHUB_REF_NAME}
  # ```
  #
  # See https://docs.github.com/en/actions/using-workflows/reusing-workflows#creating-a-reusable-workflow
