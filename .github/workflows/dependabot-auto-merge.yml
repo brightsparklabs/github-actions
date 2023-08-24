@@ -19,7 +19,7 @@
  # www.brightsparklabs.com
  ##
 
-name: Dependabot auto-merge
+name: Dependabot Auto-Merge
 on:
   # This workflow will run when called by another workflow.
   workflow_call:
