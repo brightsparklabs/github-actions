@@ -13,8 +13,7 @@ on:
   workflow_call:
     inputs:
       os:
-        description: > 
-          A JSON string containing the list of operating systems to run the Gradle build on.
+        description: A JSON string containing the list of operating systems to run Gradle build on.
         default: '["ubuntu-latest"]'
         required: false
         type: string
