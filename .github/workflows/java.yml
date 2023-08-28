@@ -1,0 +1,64 @@
+##
+ # Reusable standardised Java workflow to automate testing, dependency patching,
+ # and release publishing.
+ #
+ # This workflow can be called from workflows in other repos with:
+ # ```
+ # jobs:
+ #   <job-id>:
+ #     uses: brightsparklabs/github-actions/.github/workflows/java.yml@<version>
+ #     secrets: inherit
+ #     permissions:
+ #       contents: write
+ #       pull-requests: write
+ # ```
+ # See https://docs.github.com/en/actions/using-workflows/reusing-workflows#creating-a-reusable-workflow
+ # ______________________________________________________________________________
+ #
+ # Maintained by brightSPARK Labs.
+ # www.brightsparklabs.com
+ ##
+
+name: Java Workflow
+on:
+  # This workflow will run when called by another workflow.
+  workflow_call:
+    inputs:
+      os:
+        description: A JSON string containing the list of operating systems to run Gradle build on.
+        default: '["ubuntu-latest"]'
+        required: false
+        type: string
+
+jobs:
+  # Run tests.
+  call-test-gradle-build-workflow:
+    # Prevent unnecessary duplicate test runs.
+    if: |
+      (github.event_name == 'push' && github.actor != 'dependabot[bot]') ||
+      (github.event_name == 'pull_request' && github.actor == 'dependabot[bot]')
+    strategy:
+      matrix:
+        os: ${{ fromJson(inputs.os) }}
+    uses: ./.github/workflows/test-gradle-build.yml
+    with:
+      os: ${{ matrix.os }}
+  # Auto-merge Dependabot PRs for patch and minor updates.
+  call-dependabot-auto-merge-workflow:
+    if: ${{ github.event_name == 'pull_request' && github.actor == 'dependabot[bot]' }}
+    # Specify that this job should only run if the test job succeeds.
+    needs: call-test-gradle-build-workflow
+    # These permissions are required for Dependabot to merge the PR.
+    permissions:
+      contents: write
+      pull-requests: write
+    uses: ./.github/workflows/dependabot-auto-merge.yml
+    # Since all of our workflows are called from the same organisation, we can use the `inherit`
+    # keyword to pass secrets to the called workflow.
+    secrets: inherit
+  # Publish pushes to the `master` branch.
+  call-publish-to-maven-central-workflow:
+    if: ${{ github.event_name == 'push' && github.ref_name == 'master' }}
+    needs: call-test-gradle-build-workflow
+    uses: ./.github/workflows/publish-to-maven-central.yml
+    secrets: inherit
