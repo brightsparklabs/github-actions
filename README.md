@@ -30,6 +30,8 @@ The following secrets must be passed to this workflow:
 
 ### Usage
 
+**NOTE: Its easiest to use `@master` for the version unless you really need to be explicit.**
+
 ```yaml
 name: Java Workflow
 on: [push, pull_request]
