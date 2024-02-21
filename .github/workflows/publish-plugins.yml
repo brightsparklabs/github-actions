@@ -5,9 +5,8 @@
 
 name: Publish
 on:
-  push:
-    branches:
-      - master
+  # This workflow will run when called by another workflow.
+  workflow_call:
 
 jobs:
   Publish:
