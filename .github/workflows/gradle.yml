@@ -57,7 +57,7 @@ jobs:
     # keyword to pass secrets to the called workflow.
     secrets: inherit
   # Publish pushes to the `master` branch.
-  call-publish-gradle-plugins:
+  call-publish-plugins-workflow:
     if: ${{ github.event_name == 'push' && github.ref_name == 'master' }}
     needs: call-test-gradle-build-workflow
     uses: ./.github/workflows/publish-plugins.yml
