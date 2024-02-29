@@ -29,6 +29,10 @@ on:
         default: '["ubuntu-latest"]'
         required: false
         type: string
+      publishToMaven:
+        description: Whether to publish to Maven (true) or publish gradle plugins (false).
+        required: true
+        type: boolean
 
 jobs:
   # Run tests.
@@ -58,7 +62,12 @@ jobs:
     secrets: inherit
   # Publish pushes to the `master` branch.
   call-publish-to-maven-central-workflow:
-    if: ${{ github.event_name == 'push' && github.ref_name == 'master' }}
+    if: ${{ github.event_name == 'push' && github.ref_name == 'master' && inputs.publishToMaven }}
     needs: call-test-gradle-build-workflow
     uses: ./.github/workflows/publish-to-maven-central.yml
+    secrets: inherit
+  call-publish-gradle-plugins:
+    if: ${{ github.event_name == 'push' && github.ref_name == 'master' && !(inputs.publishToMaven) }}
+    needs: call-test-gradle-build-workflow
+    uses: ./.github/workflows/publish-gradle-plugins.yml
     secrets: inherit
