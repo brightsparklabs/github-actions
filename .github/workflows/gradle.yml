@@ -1,12 +1,12 @@
 ##
- # Reusable standardised Java workflow to automate testing, dependency patching,
- # and release publishing.
+ # Reusable standardised Gradle workflow to automate testing, dependency patching,
+ # and Gradle plugin publishing.
  #
  # This workflow can be called from workflows in other repos with:
  # ```
  # jobs:
  #   <job-id>:
- #     uses: brightsparklabs/github-actions/.github/workflows/java.yml@<version>
+ #     uses: brightsparklabs/github-actions/.github/workflows/gradle.yml@<version>
  #     secrets: inherit
  #     permissions:
  #       contents: write
@@ -19,7 +19,7 @@
  # www.brightsparklabs.com
  ##
 
-name: Java Workflow
+name: Gradle Workflow
 on:
   # This workflow will run when called by another workflow.
   workflow_call:
@@ -29,10 +29,6 @@ on:
         default: '["ubuntu-latest"]'
         required: false
         type: string
-      publishToMaven:
-        description: Whether to publish to Maven (true) or publish gradle plugins (false).
-        required: true
-        type: boolean
 
 jobs:
   # Run tests.
@@ -61,13 +57,8 @@ jobs:
     # keyword to pass secrets to the called workflow.
     secrets: inherit
   # Publish pushes to the `master` branch.
-  call-publish-to-maven-central-workflow:
-    if: ${{ github.event_name == 'push' && github.ref_name == 'master' && inputs.publishToMaven }}
-    needs: call-test-gradle-build-workflow
-    uses: ./.github/workflows/publish-to-maven-central.yml
-    secrets: inherit
   call-publish-plugins-workflow:
-    if: ${{ github.event_name == 'push' && github.ref_name == 'master' && !(inputs.publishToMaven) }}
+    if: ${{ github.event_name == 'push' && github.ref_name == 'master' }}
     needs: call-test-gradle-build-workflow
-    uses: ./.github/workflows/publish-gradle-plugins.yml
+    uses: ./.github/workflows/publish-plugins.yml
     secrets: inherit
