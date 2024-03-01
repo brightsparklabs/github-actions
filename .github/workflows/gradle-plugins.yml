@@ -6,7 +6,7 @@
  # ```
  # jobs:
  #   <job-id>:
- #     uses: brightsparklabs/github-actions/.github/workflows/gradle.yml@<version>
+ #     uses: brightsparklabs/github-actions/.github/workflows/gradle-plugins.yml@<version>
  #     secrets: inherit
  #     permissions:
  #       contents: write

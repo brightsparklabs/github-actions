@@ -145,40 +145,53 @@ jobs:
     secrets: inherit
 ```
 
-## Publish to Maven Central
+## Gradle Workflow
 
-A reusable workflow for publishing packages to Maven Central. Runs
-`./gradlew -i publishToMavenCentral` using JDK 17.
+A reusable standardised Gradle workflow to automate testing, dependency patching, and release publishing. This workflow calls the following workflows within this repo:
+- Build with Gradle
+- Dependabot Auto-Merge
+- Publish (Gradle) plugins
 
 ### Inputs
 
-This workflow has no inputs.
+| Name | Description                                                                    | Required | Type     | Default               |
+|------|--------------------------------------------------------------------------------|----------|----------|-----------------------|
+| `os` | A JSON string containing the list of operating systems to run Gradle build on. | `false`  | `string` | `'["ubuntu-latest"]'` |
 
 ### Secrets
 
 The following secrets must be passed to this workflow:
-- `PGP_SIGNING_KEY`
-- `PGP_SIGNING_PASSWORD`
-- `MAVEN_CENTRAL_USERNAME`
-- `MAVEN_CENTRAL_PASSWORD`
+- `GITHUB_TOKEN`
 
 ### Usage
 
-```yaml
-# exmaple-repo/.github/workflows/publish.yml
+**NOTE: Its easiest to use `@master` for the version unless you really need to be explicit.**
 
-name: Publish to Maven Central
-on:
-  # Call workflow on push to the `master` branch.
-  push:
-    branches:
-      - master
+```yaml
+name: Java Workflow
+on: [push, pull_request]
 
 jobs:
-  call-test-workflow:
-    uses: ./.github/workflows/test.yml
-  call-publish-to-maven-central-workflow:
-    needs: call-test-workflow
-    uses: brightsparklabs/github-actions/.github/workflows/publish-to-maven-central.yml@<version>
+  call-java-workflow:
+    uses: brightsparklabs/github-actions/.github/workflows/java.yml@<version>
     secrets: inherit
+    # These permissions are required for Dependabot to merge PRs.
+    permissions:
+      contents: write
+      pull-requests: write
+```
+
+By default, `./gradlew build` will run on `ubuntu-latest`. Multiple operating systems can be
+specified with the `os` input:
+
+```yaml
+jobs:
+  call-gradle-workflow:
+    uses: brightsparklabs/github-actions/.github/workflows/gradle-plugins.yml@<version>
+    secrets: inherit
+    permissions:
+      contents: write
+      pull-requests: write
+    with:
+      os: '["ubuntu-latest", "windows-latest"]'
 ```
