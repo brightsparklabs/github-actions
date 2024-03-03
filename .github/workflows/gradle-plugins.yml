@@ -19,7 +19,7 @@
  # www.brightsparklabs.com
  ##
 
-name: Gradle Workflow
+name: Gradle Plugins Workflow
 on:
   # This workflow will run when called by another workflow.
   workflow_call:

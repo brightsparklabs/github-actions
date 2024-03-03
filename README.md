@@ -145,7 +145,7 @@ jobs:
     secrets: inherit
 ```
 
-## Gradle Workflow
+## Gradle Plugins Workflow
 
 A reusable standardised Gradle workflow to automate testing, dependency patching, and release publishing. This workflow calls the following workflows within this repo:
 - Build with Gradle
@@ -168,12 +168,12 @@ The following secrets must be passed to this workflow:
 **NOTE: Its easiest to use `@master` for the version unless you really need to be explicit.**
 
 ```yaml
-name: Java Workflow
+name: Gradle Plugins Workflow
 on: [push, pull_request]
 
 jobs:
-  call-java-workflow:
-    uses: brightsparklabs/github-actions/.github/workflows/java.yml@<version>
+  call-gradle-plugins-workflow:
+    uses: brightsparklabs/github-actions/.github/workflows/gradle-plugins.yml@<version>
     secrets: inherit
     # These permissions are required for Dependabot to merge PRs.
     permissions:
@@ -186,7 +186,7 @@ specified with the `os` input:
 
 ```yaml
 jobs:
-  call-gradle-workflow:
+  call-gradle-plugins-workflow:
     uses: brightsparklabs/github-actions/.github/workflows/gradle-plugins.yml@<version>
     secrets: inherit
     permissions:
