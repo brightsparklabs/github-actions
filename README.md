@@ -15,7 +15,8 @@ A reusable standardised Java workflow to automate testing, dependency patching, 
 publishing. This workflow calls the following workflows within this repo:
 - Build with Gradle
 - Dependabot Auto-Merge
-- Publish to Maven Central
+
+In addition, it defines and runs a job for publishing the project as a package to Maven Central; this is only done when pushing to master, after first getting the correct tag/version for the project in question.
 
 ### Inputs
 
@@ -150,7 +151,8 @@ jobs:
 A reusable standardised Gradle workflow to automate testing, dependency patching, and release publishing. This workflow calls the following workflows within this repo:
 - Build with Gradle
 - Dependabot Auto-Merge
-- Publish (Gradle) plugins
+
+In addition, it defines and runs a job for publishing gradle plugins when pushing to master, after first getting the correct tag/version for the project in question.
 
 ### Inputs
 
