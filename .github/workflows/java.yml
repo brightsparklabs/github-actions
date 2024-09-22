@@ -29,6 +29,11 @@ on:
         default: '["ubuntu-latest"]'
         required: false
         type: string
+      java_version:
+        description: The version of Java to run this workflow on.
+        default: "17"
+        required: false
+        type: string
 
 jobs:
   # Run tests.
@@ -71,10 +76,10 @@ jobs:
         # - https://github.com/actions/checkout/issues/882
         if: github.ref_type == 'tag'
         run: git fetch -fv origin tag ${{ github.ref_name }}
-      - name: Set up JDK 17
+      - name: Set up JDK
         uses: actions/setup-java@v3
         with:
-          java-version: "17"
+          java-version: ${{ inputs.java_version }}
           distribution: "temurin"
           cache: "gradle"
       - name: Publish package
