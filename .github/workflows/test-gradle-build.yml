@@ -26,6 +26,11 @@ on:
         default: ubuntu-latest
         required: false
         type: string
+      java_version:
+        description: The JDK version to use for publishing to maven central.
+        default: "17"
+        required: false
+        type: string
 
 jobs:
   # Build with Gradle.
@@ -41,10 +46,10 @@ jobs:
         # - https://github.com/actions/checkout/issues/290
         # - https://github.com/actions/checkout/issues/882
         run: git fetch -fvt origin
-      - name: Set up JDK 17
+      - name: Set up JDK ${{ inputs.java_version }}
         uses: actions/setup-java@v3
         with:
-          java-version: "17"
+          java-version: ${{ inputs.java_version }}
           distribution: "temurin"
           cache: "gradle"
       - name: Execute Gradle build
