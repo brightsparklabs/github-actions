@@ -27,7 +27,7 @@ on:
         required: false
         type: string
       java_version:
-        description: The JDK version to use for publishing to maven central.
+        description: The JDK version to use for executing the gradle build.
         default: "17"
         required: false
         type: string

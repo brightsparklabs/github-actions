@@ -75,11 +75,11 @@ specified JDK version (defaults to 17).
 
 ### Inputs
 
-| Name           | Description                                      | Required | Type     | Default         |
-|----------------|--------------------------------------------------|----------|----------|-----------------|
-| `os`           | The operating system to run the Gradle build on. | `false`  | `string` | `ubuntu-latest` |
-|----------------|--------------------------------------------------|----------|----------|-----------------|
-| `java_version` | The JDK version to use.                          | `false`  | `string` | `17`            |
+| Name           | Description                                            | Required | Type     | Default         |
+|----------------|--------------------------------------------------------|----------|----------|-----------------|
+| `os`           | The operating system to run the Gradle build on.       | `false`  | `string` | `ubuntu-latest` |
+|----------------|--------------------------------------------------------|----------|----------|-----------------|
+| `java_version` | The JDK version to use for executing the gradle build. | `false`  | `string` | `17`            |
 
 ### Secrets
 
@@ -165,10 +165,10 @@ In addition, it defines and runs a job for publishing gradle plugins when pushin
 
 ### Inputs
 
-| Name | Description                                                                    | Required | Type     | Default               |
-|------|--------------------------------------------------------------------------------|----------|----------|-----------------------|
-| `os` | A JSON string containing the list of operating systems to run Gradle build on. | `false`  | `string` | `'["ubuntu-latest"]'` |
-| `java_version` | The JDK version to use.                                              | `false`  | `string` | `17`                  |
+| Name           | Description                                                                    | Required | Type     | Default               |
+|----------------|--------------------------------------------------------------------------------|----------|----------|-----------------------|
+| `os`           | A JSON string containing the list of operating systems to run Gradle build on. | `false`  | `string` | `'["ubuntu-latest"]'` |
+| `java_version` | The JDK version to use.                                                        | `false`  | `string` | `17`                  |
 
 ### Secrets
 
