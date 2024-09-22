@@ -20,9 +20,11 @@ In addition, it defines and runs a job for publishing the project as a package t
 
 ### Inputs
 
-| Name | Description                                                                    | Required | Type     | Default               |
-|------|--------------------------------------------------------------------------------|----------|----------|-----------------------|
-| `os` | A JSON string containing the list of operating systems to run Gradle build on. | `false`  | `string` | `'["ubuntu-latest"]'` |
+| Name           | Description                                                                    | Required | Type     | Default               |
+|----------------|--------------------------------------------------------------------------------|----------|----------|-----------------------|
+| `os`           | A JSON string containing the list of operating systems to run Gradle build on. | `false`  | `string` | `'["ubuntu-latest"]'` |
+|----------------|--------------------------------------------------------------------------------|----------|----------|-----------------------|
+| `java_version` | The JDK version to use.                                                        | `false`  | `string` | `17`                  |
 
 ### Secrets
 
@@ -50,7 +52,8 @@ jobs:
 ```
 
 By default, `./gradlew build` will run on `ubuntu-latest`. Multiple operating systems can be
-specified with the `os` input:
+specified with the `os` input. Additionally JDK version 17 will be used by default, this can
+be explicitly overridden with the `java_version` input:
 
 ```yaml
 jobs:
@@ -62,18 +65,21 @@ jobs:
       pull-requests: write
     with:
       os: '["ubuntu-latest", "windows-latest"]'
+      java_version: 21
 ```
 
 ## Build with Gradle
 
-A reusable Gradle build workflow for testing for breaking changes. Runs `./gradlew build` using JDK
-17.
+A reusable Gradle build workflow for testing for breaking changes. Runs `./gradlew build` using the
+specified JDK version (defaults to 17).
 
 ### Inputs
 
-| Name | Description                                      | Required | Type     | Default         |
-|------|--------------------------------------------------|----------|----------|-----------------|
-| `os` | The operating system to run the Gradle build on. | `false`  | `string` | `ubuntu-latest` |
+| Name           | Description                                      | Required | Type     | Default         |
+|----------------|--------------------------------------------------|----------|----------|-----------------|
+| `os`           | The operating system to run the Gradle build on. | `false`  | `string` | `ubuntu-latest` |
+|----------------|--------------------------------------------------|----------|----------|-----------------|
+| `java_version` | The JDK version to use.                          | `false`  | `string` | `17`            |
 
 ### Secrets
 
@@ -93,7 +99,9 @@ jobs:
 ```
 
 By default, `./gradlew build` will run on `ubuntu-latest`. Multiple operating systems can be tested
-using a [matrix](https://docs.github.com/en/actions/using-jobs/using-a-matrix-for-your-jobs):
+using a [matrix](https://docs.github.com/en/actions/using-jobs/using-a-matrix-for-your-jobs). 
+Additionally JDK version 17 will be used by default, this can be explicitly overridden with the 
+`java_version` input:
 
 ```yaml
 jobs:
@@ -107,6 +115,7 @@ jobs:
     uses: brightsparklabs/github-actions/.github/workflows/test-gradle-build.yml@<version>
     with:
       os: ${{ matrix.os }}
+      java_version: 21
 ```
 
 ## Dependabot Auto-Merge
@@ -159,6 +168,7 @@ In addition, it defines and runs a job for publishing gradle plugins when pushin
 | Name | Description                                                                    | Required | Type     | Default               |
 |------|--------------------------------------------------------------------------------|----------|----------|-----------------------|
 | `os` | A JSON string containing the list of operating systems to run Gradle build on. | `false`  | `string` | `'["ubuntu-latest"]'` |
+| `java_version` | The JDK version to use.                                              | `false`  | `string` | `17`                  |
 
 ### Secrets
 
@@ -184,7 +194,8 @@ jobs:
 ```
 
 By default, `./gradlew build` will run on `ubuntu-latest`. Multiple operating systems can be
-specified with the `os` input:
+specified with the `os` input. Additionally JDK version 17 will be used by default, this can
+be explicitly overridden with the `java_version` input:
 
 ```yaml
 jobs:
@@ -196,4 +207,5 @@ jobs:
       pull-requests: write
     with:
       os: '["ubuntu-latest", "windows-latest"]'
+      java_version: 21
 ```
