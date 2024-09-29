@@ -29,6 +29,11 @@ on:
         default: '["ubuntu-latest"]'
         required: false
         type: string
+      java_version:
+        description: The JDK version to use.
+        default: "17"
+        required: false
+        type: string
 
 jobs:
   # Run tests.
@@ -43,6 +48,7 @@ jobs:
     uses: ./.github/workflows/test-gradle-build.yml
     with:
       os: ${{ matrix.os }}
+      java_version: ${{ inputs.java_version }}
   # Auto-merge Dependabot PRs for patch and minor updates.
   call-dependabot-auto-merge-workflow:
     if: ${{ github.event_name == 'pull_request' && github.actor == 'dependabot[bot]' }}
@@ -71,10 +77,10 @@ jobs:
         # - https://github.com/actions/checkout/issues/882
         if: github.ref_type == 'tag'
         run: git fetch -fv origin tag ${{ github.ref_name }}
-      - name: Set up JDK 17
+      - name: Set up JDK ${{ inputs.java_version }}
         uses: actions/setup-java@v3
         with:
-          java-version: "17"
+          java-version: ${{ inputs.java_version }}
           distribution: "temurin"
           cache: "gradle"
       - name: Publish package
