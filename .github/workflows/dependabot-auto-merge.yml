@@ -36,7 +36,7 @@ jobs:
         # Specify the ID to use to access the output of this step.
         id: metadata
         # Specify that this step will run the `dependabot/fetch-metadata` action.
-        uses: dependabot/fetch-metadata@v1
+        uses: dependabot/fetch-metadata@v2
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
       # Auto-merge the PR.
