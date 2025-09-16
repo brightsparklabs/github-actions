@@ -62,6 +62,35 @@ jobs:
     # Since all of our workflows are called from the same organisation, we can use the `inherit`
     # keyword to pass secrets to the called workflow.
     secrets: inherit
+  # Does a dry run of publishing the artifact when on `release/` branches.
+  dry-run-publish:
+    if: ${{ github.event_name == 'push' && startsWith(github.ref_name, 'release/') }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Fix tag
+        # Workaround actions/checkout bug. See:
+        # - https://github.com/actions/checkout/issues/290
+        # - https://github.com/actions/checkout/issues/882
+        if: github.ref_type == 'tag'
+        run: git fetch -fv origin tag ${{ github.ref_name }}
+      - name: Set up JDK ${{ inputs.java_version }}
+        uses: actions/setup-java@v3
+        with:
+          java-version: ${{ inputs.java_version }}
+          distribution: "temurin"
+          cache: "gradle"
+      - name: Dry run publish package
+        run: |
+          mkdir -p ~/.gradle
+          ./gradlew -i clean jreleaserDeploy --dryrun
+        env:
+          ORG_GRADLE_PROJECT_signingKey: ${{ secrets.PGP_SIGNING_KEY }}
+          ORG_GRADLE_PROJECT_signingPassword: ${{ secrets.PGP_SIGNING_PASSWORD }}
+          ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
+          ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
   # Publish pushes to the `master` branch.
   publish-to-maven-central:
     if: ${{ github.event_name == 'push' && github.ref_name == 'master' }}
