@@ -6,29 +6,31 @@ Central repo for re-using actions across all other projects.
 
 This repo contains the following reusable workflows that can be accessed from other repos.
 
-The `<version>` referenced below can be a SHA, a release tag, or a branch name. Using a release tag
-is preferred to avoid accidentally running breaking changes.
+The `<version>` referenced below can be a SHA, a release tag, or a branch name. Using a release tag is preferred to avoid accidentally running breaking changes.
 
 ## Java Workflow
 
-A reusable standardised Java workflow to automate testing, dependency patching, and release
-publishing. This workflow calls the following workflows within this repo:
-- Build with Gradle
-- Dependabot Auto-Merge
+A reusable standardised Java workflow to automate testing, dependency patching, and release publishing.
+This workflow calls the following workflows within this repo:
 
-In addition, it defines and runs a job for publishing the project as a package to Maven Central; this is only done when pushing to master, after first getting the correct tag/version for the project in question.
+* Build with Gradle
+* Dependabot Auto-Merge
+
+In addition, it defines and runs a job for publishing the project as a package to Maven Central;
+this is only done when pushing to master, after first getting the correct tag/version for the project in question.
 
 ### Inputs
 
 | Name           | Description                                                                    | Required | Type     | Default               |
 |----------------|--------------------------------------------------------------------------------|----------|----------|-----------------------|
 | `os`           | A JSON string containing the list of operating systems to run Gradle build on. | `false`  | `string` | `'["ubuntu-latest"]'` |
-| `java_version` | The JDK version to use.                                                        | `false`  | `string` | `17`                  |
+| `java_version` | The JDK version to use.                                                        | `false`  | `string` | `21`                  |
 
 ### Secrets
 
 The following secrets must be passed to this workflow:
-- `GITHUB_TOKEN`
+
+* `GITHUB_TOKEN`
 
 ### Usage
 
@@ -50,9 +52,12 @@ jobs:
       pull-requests: write
 ```
 
-By default, `./gradlew build` will run on `ubuntu-latest`. Multiple operating systems can be
-specified with the `os` input. Additionally JDK version 17 will be used by default, this can
-be explicitly overridden with the `java_version` input:
+By default:
+
+* `./gradlew build` will run on the `os` specified in the table above.
+   Multiple operating systems can be specified using a [matrix](https://docs.github.com/en/actions/using-jobs/using-a-matrix-for-your-jobs).
+* JDK version used for the build is `java_version` in the table above.
+  This can be explicitly overridden with the  input:
 
 ```yaml
 jobs:
@@ -64,20 +69,20 @@ jobs:
       pull-requests: write
     with:
       os: '["ubuntu-latest", "windows-latest"]'
-      java_version: 21
+      java_version: 25
 ```
 
 ## Build with Gradle
 
-A reusable Gradle build workflow for testing for breaking changes. Runs `./gradlew build` using the
-specified JDK version (defaults to 17).
+A reusable Gradle build workflow for testing for breaking changes.
+Runs `./gradlew build` using the specified JDK version (defaults to 17).
 
 ### Inputs
 
 | Name           | Description                                            | Required | Type     | Default         |
 |----------------|--------------------------------------------------------|----------|----------|-----------------|
 | `os`           | The operating system to run the Gradle build on.       | `false`  | `string` | `ubuntu-latest` |
-| `java_version` | The JDK version to use for executing the gradle build. | `false`  | `string` | `17`            |
+| `java_version` | The JDK version to use for executing the gradle build. | `false`  | `string` | `21`            |
 
 ### Secrets
 
@@ -96,10 +101,12 @@ jobs:
     uses: brightsparklabs/github-actions/.github/workflows/test-gradle-build.yml@<version>
 ```
 
-By default, `./gradlew build` will run on `ubuntu-latest`. Multiple operating systems can be tested
-using a [matrix](https://docs.github.com/en/actions/using-jobs/using-a-matrix-for-your-jobs). 
-Additionally JDK version 17 will be used by default, this can be explicitly overridden with the 
-`java_version` input:
+By default:
+
+* `./gradlew build` will run on the `os` specified in the table above.
+   Multiple operating systems can be specified using a [matrix](https://docs.github.com/en/actions/using-jobs/using-a-matrix-for-your-jobs).
+* JDK version used for the build is `java_version` in the table above.
+  This can be explicitly overridden with the  input:
 
 ```yaml
 jobs:
@@ -113,13 +120,13 @@ jobs:
     uses: brightsparklabs/github-actions/.github/workflows/test-gradle-build.yml@<version>
     with:
       os: ${{ matrix.os }}
-      java_version: 21
+      java_version: 25
 ```
 
 ## Dependabot Auto-Merge
 
-A reusable Dependabot auto-merge workflow for merging patch and minor updates. Pull requests will
-still be created for major updates, however they will need to be merged manually.
+A reusable Dependabot auto-merge workflow for merging patch and minor updates.
+Pull requests will still be created for major updates, however they will need to be merged manually.
 
 ### Inputs
 
@@ -128,7 +135,8 @@ This workflow has no inputs.
 ### Secrets
 
 The following secrets must be passed to this workflow:
-- `GITHUB_TOKEN`
+
+* `GITHUB_TOKEN`
 
 ### Usage
 
@@ -155,9 +163,11 @@ jobs:
 
 ## Gradle Plugins Workflow
 
-A reusable standardised Gradle workflow to automate testing, dependency patching, and release publishing. This workflow calls the following workflows within this repo:
-- Build with Gradle
-- Dependabot Auto-Merge
+A reusable standardised Gradle workflow to automate testing, dependency patching, and release publishing.
+This workflow calls the following workflows within this repo:
+
+* Build with Gradle
+* Dependabot Auto-Merge
 
 In addition, it defines and runs a job for publishing gradle plugins when pushing to master, after first getting the correct tag/version for the project in question.
 
@@ -166,7 +176,7 @@ In addition, it defines and runs a job for publishing gradle plugins when pushin
 | Name           | Description                                                                    | Required | Type     | Default               |
 |----------------|--------------------------------------------------------------------------------|----------|----------|-----------------------|
 | `os`           | A JSON string containing the list of operating systems to run Gradle build on. | `false`  | `string` | `'["ubuntu-latest"]'` |
-| `java_version` | The JDK version to use.                                                        | `false`  | `string` | `17`                  |
+| `java_version` | The JDK version to use.                                                        | `false`  | `string` | `21`                  |
 
 ### Secrets
 
@@ -191,9 +201,12 @@ jobs:
       pull-requests: write
 ```
 
-By default, `./gradlew build` will run on `ubuntu-latest`. Multiple operating systems can be
-specified with the `os` input. Additionally JDK version 17 will be used by default, this can
-be explicitly overridden with the `java_version` input:
+By default:
+
+* `./gradlew build` will run on the `os` specified in the table above.
+   Multiple operating systems can be specified using a [matrix](https://docs.github.com/en/actions/using-jobs/using-a-matrix-for-your-jobs).
+* JDK version used for the build is `java_version` in the table above.
+  This can be explicitly overridden with the  input:
 
 ```yaml
 jobs:
@@ -205,5 +218,5 @@ jobs:
       pull-requests: write
     with:
       os: '["ubuntu-latest", "windows-latest"]'
-      java_version: 21
+      java_version: 25
 ```
