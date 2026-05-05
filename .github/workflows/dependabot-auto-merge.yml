@@ -38,7 +38,7 @@ jobs:
         # Specify that this step will run the `dependabot/fetch-metadata` action.
         uses: dependabot/fetch-metadata@v3
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          github-token: ${{ secrets.DEPENDABOT_GITHUB_TOKEN }}
       # Auto-merge the PR.
       - name: Auto-merge Dependabot PR
         # Auto-merge dependencies only for patch and minor updates.
@@ -49,4 +49,4 @@ jobs:
         # For example, setting `needs: <test-job-id>` in the calling workflow job.
         run: gh pr merge --auto --merge ${{ github.event.pull_request.html_url }}
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.DEPENDABOT_GITHUB_TOKEN }}
